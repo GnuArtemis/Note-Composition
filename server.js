@@ -12,6 +12,9 @@ app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
 app.use(express.static('public'));
 
+let data = fs.readFileSync(path.join(__dirname, "db/db.json"),"utf-8");
+data = JSON.parse(data);
+
 //Basic route, site intro
 app.get("/", function(req, res) {
     res.sendFile(path.join(__dirname, "public/index.html"));
@@ -23,21 +26,33 @@ app.get("/notes", function(req, res) {
 })
 
 app.get("/api/notes", function(req, res) {
-    let data = fs.readFileSync(path.join(__dirname, "db/db.json"),"utf-8");
-    data = JSON.parse(data);
     res.json(data);
 })
 
 app.post("/api/notes", function(req, res){
-    let data = fs.readFileSync(path.join(__dirname, "db/db.json"),"utf-8");
-    data = JSON.parse(data);
-    console.log(data);
     const newNote = req.body;
+
+    const maxID = data.reduce(function(acc,currVal) {
+        if( currVal.id > acc) return currVal.id;
+        else return acc.id;
+    },0)
+    newNote.id = maxID + 1;
+
     data.push(newNote);
     fs.writeFileSync(path.join(__dirname, "db/db.json"),JSON.stringify(data))
 
     res.json(newNote);
 })
+
+app.delete('/api/notes/:id', function (req, res) {
+    // res.send('DELETED')
+    const id = req.params.id;
+
+    data = data.filter(element => element.id !== parseInt(req.params.id));
+    fs.writeFileSync(path.join(__dirname, "db/db.json"),JSON.stringify(data))
+    res.send("DELETED");
+
+  })
 
 //Starts the server listening
 app.listen(PORT, function() {

@@ -11,6 +11,7 @@ app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
 app.use(express.static('public'));
 
+//Reads the persistently stored data
 let data = fs.readFileSync(path.join(__dirname, "db/db.json"),"utf-8");
 data = JSON.parse(data);
 
@@ -24,10 +25,12 @@ app.get("/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "public/notes.html"));
 })
 
+//Returns API note data
 app.get("/api/notes", function(req, res) {
     res.json(data);
 })
 
+//Lets users add to the notes, gives every new note a unique ID
 app.post("/api/notes", function(req, res){
     const newNote = req.body;
 
@@ -43,6 +46,7 @@ app.post("/api/notes", function(req, res){
     res.json(newNote);
 })
 
+//Lets users delete notes, based on id called
 app.delete('/api/notes/:id', function (req, res) {
     // res.send('DELETED')
     const id = req.params.id;

@@ -37,7 +37,9 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## Questions
 Please direct questions to:
+
 Github account gnuartemis
+
 annmguinee@gmail.com 
 
 ## License 

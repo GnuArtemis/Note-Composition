@@ -2,7 +2,6 @@
 const express = require ("express");
 const path = require("path");
 const fs = require("fs");
-const { join } = require("path");
 
 //Sets up express app and handles data parsing
 const app = express();
